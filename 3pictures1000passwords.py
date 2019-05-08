@@ -53,7 +53,7 @@ def createfen(nom, taille, bg, full):
     ##La fenêtre réapparait 
     nom.deiconify()
     ##Mise en place du nom
-    nom.title("5 pictures 1000 passwords")
+    nom.title("3 pictures 1000 passwords")
     ##Mise en place de la taille
     nom.geometry('{}'.format(taille))
 
