@@ -3,6 +3,9 @@ from tkinter import font
 import os.path
 import random
 from tkinter import *
+from tkinter import Menu
+from inspect import signature
+
 
 img_liste = []
 mauvais_contenu = [] 
@@ -14,7 +17,6 @@ mdp_choisi_random=[]
 nom1 = ''
 nom = ''
 entree_liste = []
-liste_triee = []
 
 fen1=Tk()
 
@@ -26,6 +28,15 @@ log3=Toplevel()
 log3.withdraw()
 log4=Toplevel()
 log4.withdraw()
+log5=Toplevel()
+log5.withdraw()
+log6=Toplevel()
+log6.withdraw()
+log7=Toplevel()
+log7.withdraw()
+log8=Toplevel()
+log8.withdraw()
+
 
 Con1=Toplevel()
 Con1.withdraw()
@@ -53,10 +64,9 @@ def createfen(nom, taille, bg, full):
     ##La fenêtre réapparait 
     nom.deiconify()
     ##Mise en place du nom
-    nom.title("3 pictures 1000 passwords")
+    nom.title("5 pictures 1000 passwords")
     ##Mise en place de la taille
     nom.geometry('{}'.format(taille))
-
     ##Centrage de la fenêtre sur l'écran source : https://stackoverflow.com/questions/3352918/how-to-center-a-window-on-the-screen-in-tkinter de Wayne Werner
     nom.update_idletasks()
     width = nom.winfo_width()
@@ -106,7 +116,7 @@ def readuser():
 ##Fonction qui lit, le mot de passe d'un utilisateur, et qui le renvoie, dans la liste mot_de_passe.
 def readpassword(index): 
     mot_de_passe=[]
-    lire_ligne=[]
+    lire_ligne1=[]
     index=index+1
     n=1
 
@@ -115,10 +125,10 @@ def readpassword(index):
         index=((index)*8)
     else:
         index= (index * 7)+1 
-    ##La liste lire_ligne dispose des lignes que la boucle doit lire pour récupérer le mot de passe de l'utilisateur. 
-    lire_ligne.append((index-2))
-    lire_ligne.append((index-1))
-    lire_ligne.append((index))
+    ##La liste lire_ligne1 dispose des lignes que la boucle doit lire pour récupérer le mot de passe de l'utilisateur.
+    lire_ligne1.append((index-2))
+    lire_ligne1.append((index-1))
+    lire_ligne1.append((index))
     
     with open("data.txt", "r") as data:
         for line in data:
@@ -130,13 +140,13 @@ def readpassword(index):
             password = password.replace("']", "")
 
             ##Ajoute à la liste mot_de_passe les lignes correspondantes.
-            if n == lire_ligne[0]:
+            if n == lire_ligne1[0]:
                 mot_de_passe.append(password)
                 
-            elif n == lire_ligne[1]: 
+            elif n == lire_ligne1[1]:
                 mot_de_passe.append(password)
                 
-            elif n == lire_ligne[2]:
+            elif n == lire_ligne1[2]:
                
                 mot_de_passe.append(password)
             n=n+1
@@ -309,9 +319,8 @@ def createfen1(nom1, taille, bg):
     nom1.configure(bg='{}'.format(bg))
     # nom1.withdraw()
     return nom1
-
-
-def Menu(detruit):
+    
+def Menu1(detruit):
 
     if detruit != "":
         detruit.withdraw()
@@ -321,7 +330,7 @@ def Menu(detruit):
 
     
     myimg = "cadena.png"
-    ##Recherche dans le dossier images. 
+    ##Recherche dans le dossier images.
     path=os.path.join("images", myimg)
     can=Canvas(fen1, width =587, height =310, bg ='white')
     im = can.img1= PhotoImage(file = path)
@@ -355,7 +364,7 @@ def Connexion1(detruit, error):
     
     createfen(Con1, "700x220", "grey","0")
     detruit.withdraw()
-    
+
     ##Font
     my_font = font.Font(Con1, ('Helvetica', 12, 'bold'))
 
@@ -382,59 +391,53 @@ def Connexion1(detruit, error):
     bouton2.place(x=630, y=120)
 
 
-
-
 def Connexion2(detruit, entry, error):
-
     ##Fonction readuser
-    pseudos=readuser()
+    pseudos = readuser()
 
     ##En cas d'échec du mot de passe. 
     if detruit == Con1:
         ##Obtenir l'entrée
-        nom=str(entry.get())
+        nom = str(entry.get())
     else:
         mdp_choisi_random[:] = []
         choix[:] = []
-        nom=entry
-
-
-
+        nom = entry
 
     ##Vérification que le nom existe
     if nom in pseudos:
-        
+
         createfen(Con2, "1000x400", "grey", "0")
+        detruit.withdraw()
         detruit.withdraw()
 
         ##Indexation du nom d'utilisateur
-        index=pseudos.index(nom)
+        index = pseudos.index(nom)
 
         ##Obtention du mot de passe de l'utilisateur
         motpasse = readpassword(index)
 
-        ##Font       
+        ##Font
         my_font = font.Font(Con2, ('Helvetica', 15, 'bold'))
 
         ## String texte qui contient le message à afficher sur l'écran
-        texte = ( error + "{0}, pour pouvoir vous connecter il faut que vous retrouviez les images qui correspondent à votre" +
-                 " mot de passe à partir d'un diaporama de 15 images. Il y en aura zéro, une ou deux qui correspondront" + 
-                 " aux images que vous avez choisies lors de votre inscription ! ").format(nom)
+        texte = (
+                    error + "{0}, pour pouvoir vous connecter il faut que vous retrouviez les images qui correspondent à votre" +
+                    " mot de passe à partir d'un diaporama de 15 images. Il y en aura zéro, une ou deux qui correspondront" +
+                    " aux images que vous avez choisies lors de votre inscription ! ").format(nom)
 
-        
         ## Placement du label texte qui est justifié vers la gauche
         label = Label(Con2, text=texte, background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
         label.place(x=20, y=50, width=500, height=200)
 
         ##Bouton
-        bouton = Button(Con2, text="Suivant", background='red' ,command=lambda:Connexion3(Con2, motpasse, nom))
+        bouton = Button(Con2, text="Suivant", background='red', command=lambda: Connexion3(Con2, motpasse, nom))
         bouton.place(x=900, y=112)
 
-    ##Si le nom d'utilisateur n'existe pas.     
+    ##Si le nom d'utilisateur n'existe pas.
     else:
-        error="Le nom d'utilisateur n'existe pas !" 
+        error = "Le nom d'utilisateur n'existe pas !"
         Connexion1(fen1, error)
-
 
 
 def Connexion3(detruit, mdp, nom):
@@ -511,7 +514,7 @@ def Connexion5(detruit, mdp, nombre, nom):
     label.place(x=20, y=560, width=500, height=49)
 
     ##Bouton   
-    bouton = Button(Con5, text="Suivant",background='red' , command=lambda:start(Con5, nom))
+    bouton = Button(Con5, text="Suivant",background='red', command=lambda:start(Con5, nom))
     bouton.place(x=800, y=560)
 
 def start(detruit, nom):
@@ -526,28 +529,35 @@ def start(detruit, nom):
     choix2.sort()
     
     if mdp_choisi_random==choix2:
-        log1 = createfen1('main', "1280x700", "cyan")
-        bouton_connexion = Button(log1, text="Genre 1",command=lambda:themes(log1,nom))
-        bouton_connexion.place(x=560, y=280)
-        bouton_connexion.configure(background="green", foreground="black")
-        print("Connect", nom)
-        log1.mainloop()
+        createfen(log1, "1280x700", "grey","0")
+        menu_bar(log1)
+        my_font = font.Font(log1, ('Helvetica', 12, 'bold'))
+        pseudo = read_pseudos()
+        #Si le pseudo n'est pas enregistré
+        if not nom in pseudo:
+            bouton_1erefois = Button(log1, text="Tutoriel", command=lambda:themes(log1,nom))
+            bouton_1erefois.place(x=580, y=280)
+            bouton_1erefois.configure(background="red", foreground="black")
+        else:
+            bouton_connexion = Button(log1, text="Connexion", command=lambda: gestion_1(log1,nom))
+            bouton_connexion.place(x=580, y=280)
+            bouton_connexion.configure(background="red", foreground="black")
+
     else:
-        choix2[:] = []
         error="Mot de passe incorrect ! "
         Connexion2(Con5, nom, error)
-
-
 def themes(detruit,nom):
+    #globaliser pour ne pas encombrer les paramètres de la fonction
     global E1
     global E2
     global E3
     detruit.withdraw()
-    createfen(log2, "1280x700", "cyan", "0")
+    createfen(log2, "1280x700", "grey", "0")
     my_font = font.Font(log2, ('Helvetica', 12, 'bold'))
+    menu_bar(log2)
 
-    themes1 = Label(log2, text="Nommer ci-dessous les thèmes de mots de passe choisies:", font=my_font)
-    themes1.config(width=80, height=4, bg="white", fg="black")        
+    themes1 = Label(log2, text="Nommer ci-dessous les thèmes de mots de passe choisies:", background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+    themes1.config(width=80, height=4)
     themes1.place(x=200, y=30)
 
     E1 = Entry(log2)
@@ -556,13 +566,12 @@ def themes(detruit,nom):
     E2.place(x=540, y=195, width=150)
     E3 = Entry(log2)
     E3.place(x=540, y=270, width=150)
-    bouton_valider = Button(log2, text='Valider', command=lambda:categories(log2,nom))
+    bouton_valider = Button(log2, text='Valider',background='red',  command=lambda:categories(log2,nom))
     bouton_valider.place(relx=0.80, rely=0.6)
-    bouton_valider.config(foreground="black", background="green")
-
 
 
 def categories(detruit, nom):
+    #globaliser pour ne pas encombrer les paramètres de la fonction
     global G1
     global G2
     global G3
@@ -572,7 +581,6 @@ def categories(detruit, nom):
     global C1_2
     global C2_2
     global C3_2
-    #boucle !!!!!
     G1 = str(E1.get())
     entree_liste.append(G1)
     G2 = str(E2.get())
@@ -580,12 +588,12 @@ def categories(detruit, nom):
     G3 = str(E3.get())
     entree_liste.append(G3)
     detruit.withdraw()
-    createfen(log3, "1280x700", "cyan", "0")
-    ## Peut-être une boucle?
-    my_font2 = font.Font(log3, ('Helvetica', 12, 'bold'))
-    categorie1 = Label(log3, text="Nommer les catégories pour le thème {}:".format(entree_liste[0]), font=my_font2,
-                       width=40, height=4, bg="white", fg="black")
+    createfen(log3, "1280x700", "grey", "0")
+    menu_bar(log3)
+    my_font = font.Font(log3, ('Helvetica', 12, 'bold'))
+    categorie1 = Label(log3, text="Nommer les catégories pour le thème {}:".format(entree_liste[0]), background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
     categorie1.place(x=150, y=30)
+    #Place les entrées des catégories
     C1_1 = Entry(log3)
     C1_1.place(x=360, y=120, width=150)
     C2_1 = Entry(log3)
@@ -593,20 +601,35 @@ def categories(detruit, nom):
     C3_1 = Entry(log3)
     C3_1.place(x=360, y=270, width=150)
     categorie2 = Label(log3, text="Nommer les catégories pour le thème {}:".format(entree_liste[1]),
-                       font=my_font2,
-                       width=40, height=4, bg="white", fg="black")
-    categorie2.place(x=250, y=30)
+                       background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+    categorie2.place(x=400, y=30)
     C1_2 = Entry(log3)
     C1_2.place(x=540, y=120, width=150)
     C2_2 = Entry(log3)
     C2_2.place(x=540, y=195, width=150)
     C3_2 = Entry(log3)
     C3_2.place(x=540, y=270, width=150)
-    bouton_valider = Button(log3, text='Valider', command=lambda:gestion_1(log3,nom))
+    bouton_valider = Button(log3, text='Valider',background='red', command=lambda:gestion_1(log3,nom))
     bouton_valider.place(relx=0.80, rely=0.6)
-    bouton_valider.config(foreground="black", background="green")
 
-
+def read_pseudos():
+    n = 0
+    liste_pseudos = []
+    # Création du fichier
+    open("mdps.txt", 'w').close()
+    ## Si le ficher data.txt existe, le programme lit le ficher
+    with open("mdps.txt", "r") as mdps:
+        for mdp in mdps:
+            n = n + 1
+            if (n == 33):
+                n = 1
+            if (n == 0):
+                pseudo = mdps.readline()
+                pseudo = pseudo.replace("\n", "")
+                liste_pseudos.append(pseudo)
+            else:
+                pass
+    return liste_pseudos
 def save_noms(nom):
     T1_1 = str(C1_1.get())
     entree_liste.append(T1_1)
@@ -620,300 +643,724 @@ def save_noms(nom):
     entree_liste.append(T2_2)
     T3_2 = str(C3_2.get())
     entree_liste.append(T3_2)
-    with open("mdps.txt", "a+") as mdps:
-        # Tri de la liste entree_liste:
-        liste_triee = [entree_liste[0], entree_liste[3], entree_liste[4], entree_liste[5], entree_liste[1],
-                       entree_liste[6], entree_liste[7], entree_liste[8], entree_liste[2]]
-        for i in range(33):
-            if i == 0:
-                mdps.write("{}\n".format(nom))
-            elif i == 1:
-                mdps.write("Thème 1 : {}\n".format(liste_triee[0]))
-            elif i == 2:
-                mdps.write("Catégorie 1 : {} \n".format(liste_triee[1]))
-            elif i == 6:
-                mdps.write("Catégorie 2 : {} \n".format(liste_triee[2]))
-            elif i == 10:
-                mdps.write("Catégorie 3 : {} \n".format(liste_triee[3]))
-            elif i == 14:
-                mdps.write("Thème 2 : {} \n".format(liste_triee[4]))
-            elif i == 15:
-                mdps.write("Catégorie 1 : {} \n".format(liste_triee[5]))
-            elif i == 19:
-                mdps.write("Catégorie 2 : {} \n".format(liste_triee[6]))
-            elif i == 23:
-                mdps.write("Catégorie 3 : {} \n".format(liste_triee[7]))
-            elif i == 27:
-                mdps.write("Thème 3 : {} \n".format(liste_triee[8]))
-            else:
-                mdps.write("\n")
 
+    # Tri de la liste entree_liste:
+    liste_triee = [entree_liste[0], entree_liste[3], entree_liste[4], entree_liste[5], entree_liste[1],
+                   entree_liste[6], entree_liste[7], entree_liste[8], entree_liste[2]]
+    #Ecrit dans le fichier
+    with open("mdps.txt", "a+") as mdps:
+            for i in range(33):
+                if i == 0:
+                    mdps.write("{}\n".format(nom))
+                elif i == 1:
+                    mdps.write("Thème 1 : {}\n".format(liste_triee[0]))
+                elif i == 2:
+                    mdps.write("Catégorie 1 : {} \n".format(liste_triee[1]))
+                elif i == 6:
+                    mdps.write("Catégorie 2 : {} \n".format(liste_triee[2]))
+                elif i == 10:
+                    mdps.write("Catégorie 3 : {} \n".format(liste_triee[3]))
+                elif i == 14:
+                    mdps.write("Thème 2 : {} \n".format(liste_triee[4]))
+                elif i == 15:
+                    mdps.write("Catégorie 1 : {} \n".format(liste_triee[5]))
+                elif i == 19:
+                    mdps.write("Catégorie 2 : {} \n".format(liste_triee[6]))
+                elif i == 23:
+                    mdps.write("Catégorie 3 : {} \n".format(liste_triee[7]))
+                elif i == 27:
+                    mdps.write("Thème 3 : {} \n".format(liste_triee[8]))
+                else:
+                    # Obliger de mettre un 0 pour que la string ne soit pas vide afin de pouvoir la transformer en int
+                    mdps.write("0\n")
 
 def gestion_1(detruit,nom):
     save_noms(nom)
     detruit.withdraw()
-    createfen(log4, "1280x700", "cyan", "0")
-    with open("mdps.txt", "a+") as mdps:
+    createfen(log4, "1280x700", "grey", "0")
+    menu_bar(log4)
+    identites = []
+    w_or_e = []
+    #Mod permet de savoir la ligne précisement
+    with open("mdps.txt", "r+") as mdps:
         for i in range(1):
             mdps.seek(0)
             all_lines = mdps.readlines()
-            all_lines = [line.rstrip("\n") for line in all_lines]
-        i = 0
-        while True:
-            if len(all_lines) < i-1:
+            all_lines = [lines.rstrip("\n") for lines in all_lines]
+        mod = all_lines[len(entree_liste) % 33]
+        mod = int(mod)
+        while mod <= len(all_lines):
+            mod += 1
+            if mod == 0 and mod != nom:
                 break
-            elif (all_lines[i] % 33) == 1 and (all_lines[i] % 33) != nom:
-                #condition qui marche pas
-                break
+            elif mod == 1:
+                bouton_genre1 = Button(log4, text=all_lines[mod],background='red', command=lambda:[select_button(bouton_genre1,identites),gestion2(log4, mod, identites, nom,w_or_e)])
+                bouton_genre1.place(x=400, y=280)
+                continue
 
+            elif mod == 14:
+                bouton_genre2 = Button(log4, text=all_lines[mod],background='red', command=lambda: [select_button(bouton_genre2,identites),gestion2(log4, mod, identites, nom,w_or_e)])
+                bouton_genre2.place(x=560, y=280)
+                continue
+            elif mod == 27:
+                bouton_genre3 = Button(log4, text=all_lines[mod],background='red', command=lambda: [select_button(bouton_genre3,identites),gestion2(log4, mod, identites, nom,w_or_e)])
+                bouton_genre3.place(x=720, y=280)
+                break
             else:
-                if i % 33 == 2:
-                    bouton_genre = Button(log4, text=all_lines[i], command=lambda: gestion2(log4,but1))
-                    bouton_genre.place(x=560, y=280)
-                elif i % 33 == 14:
-                    bouton_genre = Button(log4, text=all_lines[i], command=lambda: gestion2(log4,but2))
-                    bouton_genre.place(x=560, y=280)
-                elif i % 33 == 28:
-                    bouton_genre = Button(log4, text=all_lines[i], command=lambda: gestion2(log4,but3))
-                    bouton_genre.place(x=560, y=280)
-                else:
-                    break
-            i += 1
+                continue
+def select_button(button,liste):
+    liste.insert(0, str(button))
 
-
-def gestion2(detruit,but1, but2, but3):
+def gestion2(detruit,mod,identites,nom,w_or_e):
     detruit.withdraw()
-    createfen(log5, "1280x700", "cyan","0")
+    createfen(log5, "1280x700", "grey","0")
     menu_bar(log5)
-    with open("mdps.txt", "a+"):
-        i = 0
-        if but1 == True:
-            while True:
-                i += 1
-                if len(all_lines) < i:
+    texte = Text()
+    # Mod permet de savoir la ligne précisement
+    with open("mdps.txt", "r+") as mdps:
+        if mod == 0:
+            pass
+        else:
+            for i in range(1):
+                mdps.seek(0)
+                all_lines = mdps.readlines()
+                all_lines = [lines.rstrip("\n") for lines in all_lines]
+            mod = all_lines[len(entree_liste) % 33]
+            mod = int(mod)
+        categories_liste = []
+        #Ces 6 conditions permettent de savoir quel bouton a été cliqué
+        if ".!toplevel4.!button" == identites[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
                     break
-                else:
-                    if i % 33 == 3:
-                        bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion3(cat1))
-                        bouton_genre.place(x=560, y=280)
-                    elif i % 33 == 7:
-                        bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion3(cat2))
-                        bouton_genre.place(x=560, y=280)
-                    elif i % 33 == 10:
-                        bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion3(cat3))
-                        bouton_genre.place(x=560, y=280)
-                    else:
-                        break
-        if but2 == True:
-            while True:
-                i += 1
-                if len(all_lines) < i:
-                    break
-                else:
-                    if i % 33 == 15:
-                        bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion3(cat4))
-                        bouton_genre.place(x=560, y=280)
-                    elif i % 33 == 19:
-                        bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion3(cat5))
-                        bouton_genre.place(x=560, y=280)
-                    elif i % 33 == 23:
-                        bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion3(cat6))
-                        bouton_genre.place(x=560, y=280)
-                    else:
-                        break
+                elif mod == 2:
+                    bouton_cat1 = Button(log5, text=all_lines[mod],background='red', command=lambda:[select_button(bouton_cat1,categories_liste), gestion3(log5,nom,categories_liste,w_or_e,texte)])
+                    bouton_cat1.place(x=400, y=280)
+                    continue
 
-        if but3 == True:
-            createfen(log9,"1280*700","cyan","0")
-            menu_bar()
-            
-            # faire une feneêtre avec directement les mots de passes
+                elif mod == 6:
+                    bouton_cat2 = Button(log5, text=all_lines[mod],background='red', command=lambda: [select_button(bouton_cat2,categories_liste), gestion3(log5,nom,categories_liste,w_or_e,texte)])
+                    bouton_cat2.place(x=560, y=280)
+                    continue
+                elif mod == 10:
+                    bouton_cat3 = Button(log5, text=all_lines[mod],background='red', command=lambda: [select_button(bouton_cat3,categories_liste), gestion3(log5,nom,categories_liste,w_or_e,texte)])
+                    bouton_cat3.place(x=720, y=280)
+                    break
+                else:
+                    continue
+        if ".!toplevel4.!button2" == identites[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 15:
+                    bouton_cat4 = Button(log5, text=all_lines[mod],background='red', command=lambda: [select_button(bouton_cat4,categories_liste), gestion3(log5,nom,categories_liste,w_or_e,texte)])
+                    bouton_cat4.place(x=400, y=280)
+                    continue
+
+                elif mod == 19:
+                    bouton_cat5 = Button(log5, text=all_lines[mod],background='red', command=lambda: [select_button(bouton_cat5,categories_liste), gestion3(log5,nom,categories_liste,w_or_e,texte)])
+                    bouton_cat5.place(x=560, y=280)
+                    continue
+                elif mod == 23:
+                    bouton_cat6 = Button(log5, text=all_lines[mod],background='red', command=lambda: [select_button(bouton_cat6,categories_liste), gestion3(log5,nom,categories_liste,w_or_e,texte)])
+                    bouton_cat6.place(x=720, y=280)
+                    break
+                else:
+                    continue
+        if ".!toplevel4.!button3" == identites[0]:
+            log5.withdraw()
+            createfen(log6, "1280x700", "grey", "0")
+            no_categorie = []
+            menu_barv2(log6, nom, no_categorie, w_or_e)
+            my_font = font.Font(fen2, ('Helvetica', 12, 'bold'))
+            labelnocat1 = Label()
+            labelnocat2 = Label()
+            labelnocat3 = Label()
+            stringnocat = 'Mot de passe '
+            with open("mdps.txt", "r+") as mdps:
+
+                for i in range(1):
+                    mdps.seek(0)
+                    all_lines = mdps.readlines()
+                    all_lines = [lines.rstrip("\n") for lines in all_lines]
+                mod = all_lines[len(entree_liste) % 33]
+                mod = int(mod)
+                while mod <= len(all_lines):
+                    mod += 1
+                    if mod == 0 and mod != nom:
+                        break
+                    elif mod == 29:
+                        lire_ligne("mdps.txt", mod, no_categorie)
+                        continue
+                    elif mod == 30:
+                        lire_ligne("mdps.txt", mod, no_categorie)
+                        continue
+                    elif mod == 31:
+                        lire_ligne("mdps.txt", mod, no_categorie)
+                        break
+                    elif mod == 32:
+                        lire_ligne("mdps.txt", mod, no_categorie)
+                        continue
+                    elif mod == 33:
+                        lire_ligne("mdps.txt", mod, no_categorie)
+                        break
+                    else:
+                        continue
+
+            if labelnocat1.winfo_exists() == True:
+                labelnocat1.configure(log8, text='',background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+                labelnocat1.pack()
+            if labelnocat2.winfo_exists() == True:
+                labelnocat2.configure(log8, text='',background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+                labelnocat2.pack()
+            if labelnocat3.winfo_exists() == True:
+                labelnocat3.configure(log8, text='',background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+                labelnocat3.pack()
+            for i in range(1):
+                jk = stringnocat + " : {} ".format(no_categorie[i])
+                jk2 = stringnocat + " : {} ".format(no_categorie[i + 1])
+                jk3 = stringnocat + " : {} ".format(no_categorie[+2])
+                labelnocat1.configure(text=jk)
+                labelnocat2.configure(text=jk2)
+                labelnocat3.configure(text=jk3)
 
 def menu_bar(fenetre):
+    #Barre de menu pour tout ce qui est en dehors du gestionnaire en lui-même
     menu = Menu(fenetre)
-    new_item = Menu(menu)
-    new_item.add_command(label='New', command=lambda: createmdps(log5,new, num1))
-    new_item.add_separator()
-    new_item.add_command(label='Edit', command=lambda: createmdps(log5,edit, num2))
-    new_item.add_command(label='Quit', command=quit)
-    fen1.config(menu=menu)
+    menu.add_command(label="Retour menu", command=lambda: Menu1(fenetre))
+    menu.add_command(label="Quit", command=quit)
+    fenetre.config(menu=menu)
+
+def menu_barv2(fenetre,nom,categories_liste,w_or_e):
+    menu_bar(fenetre)
+    menu = Menu(fenetre)
+    #Barre de menu pour le gestionnaire
+    if categories_liste != []:
+        menu.add_command(label="New", command=lambda: afficher_mdps(menu,"New",nom,categories_liste,w_or_e))
+        menu.add_command(label="Edit", command=lambda: afficher_mdps(menu,"Edit",nom,categories_liste,w_or_e))
+        menu.add_command(label="Retour menu", command=lambda: Menu1(fenetre))
+        menu.add_command(label="Quit", command=quit)
+        fenetre.config(menu=menu)
+    else:
+        menu.add_command(label="New", command=lambda: afficher_mdpsv2(menu, "New", nom, categories_liste,w_or_e))
+        menu.add_command(label="Edit", command=lambda: afficher_mdpsv2(menu, "Edit", nom, categories_liste,w_or_e))
+        menu.add_command(label="Retour menu", command=lambda: Menu1(fenetre))
+        menu.add_command(label="Quit", command=quit)
+        fenetre.config(menu=menu)
 
 
-def createmdps(detruit,new, edit, num1, num2):
-    if new == True:
-        detruit.withdraw()
-        createfen(log6, "1280x700", "cyan", "0")
-
-        # peut-être une scroll bar pour destiner chaque mot de passe à un numero par exemple
-        label_creation = Label(log7, text="Créer vos mots de passe: ")
-        a = 200
-        for num1 in range(3):
-            entry_mdp[num1] = Entry(log7)
-            entry_mdp[num1].place(x=360, y=a)
-            if 200 <= a <= 300:
-                a += 20
-        valid_button = Button(log7, text="Valider", command=lambda: validation(log7))
-        valid_button.place(x=550, y=300)
-    if edit == True:
-        with open("mdps.txt","a+") as mdps:
-            pass
-
+def afficher_texte(line_num1,widget,item2):
+    #Permet d'afficher le texte
+    lines = open("mdps.txt", 'r').readlines()
+    if item2 == "3mdps":
+        texte = lines[line_num1]
+        line_num1 = (line_num1 % 3)+1
+        line_num1 = str(line_num1)
+        line_num1 = line_num1 + ".0"
+        line_num1 = float(line_num1)
+        widget.insert(str(line_num1), texte)
+    if item2 == "5mdps":
+        texte = lines[line_num1]
+        line_num1 = (line_num1 % 5)+1
+        line_num1 = str(line_num1)
+        line_num1 = line_num1 + ".0"
+        line_num1 = float(line_num1)
+        widget.insert(str(line_num1), texte)
 
 
-def validation(fenetre2, valid1, valid2):
-    if valid1 == True:
-        if gestion3(cat1):
-            for num1 in range(5):
-                donnee = str(entry_mdps[num1].get())
-                liste_mdps.append(donnee)
-            with open("mdps.txt", "a+") as mdps:
-                i = 0
-                while True:
-                    i += 1
-                    if (all_lines[i] % 33 == 1) != pseudo:
-                        break
-                    elif len(all_lines) < i:
-                        break
-                    else:
-                        if i % 33 == 4:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but1))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 5:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but2))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 6:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but3))
-                            bouton_genre.place(x=560, y=280)
-                        else:
-                            break
-        if gestion3(cat2):
-            for num1 in range(5):
-                donnee = str(entry_mdps[num1].get())
-                liste_mdps.append(donnee)
+def afficher_mdps(menu,item,nom,categories_liste,w_or_e):
+    #Permet d'afficher pour les 3 mots de passe
+    new = menu.entrycget(1, "label")
+    edit = menu.entrycget(2, "label")
+    createfen(log7, "1280x700", "grey", "0")
+    menu_bar(log7)
+    my_font = font.Font(fen2, ('Helvetica', 12, 'bold'))
+    w_or_e.append(["0"])
+    if new == item:
+        information1 = Label(log7,
+                            text="Ecrivez vos 3 mots de passes tout en respectant la règle d'un mot de passe par ligne ",background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+        information1.place(x=200, y=100)
+        texte = Text(log7, height=3, width=20)
+        texte.place(x=500, y=200)
+        buttonSave1 = Button(log7, text="Valider", background='red',command=lambda: [select_button(buttonSave1,w_or_e), save_mdps(nom,categories_liste,w_or_e,texte),gestion3(log7,nom,categories_liste,w_or_e,texte)])
+        buttonSave1.place(x=630, y=112)
+    if edit == item:
+        information2 = Label(log7,
+                            text="Modifiez vos 3 mots de passes tout en respectant la règle d'un mot de passe par ligne ",background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+        information2.place(x=200, y=100)
+        texte = Text(log7, height=3, width=20)
+        texte.place(x=500, y=200)
+        b1, b2, b3, b4, b5, b6 = save_mdps(nom, categories_liste,w_or_e,texte)
+        with open("mdps.txt", "r+") as mdps:
+            for i in range(1):
+                mdps.seek(0)
+                all_lines = mdps.readlines()
+                all_lines = [lines.rstrip("\n") for lines in all_lines]
+            mod = all_lines[len(entree_liste) % 33]
+            mod = int(mod)
+        if b1 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 3:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 4:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 5:
+                    afficher_texte(mod, texte,"3mdps")
+                    break
+                else:
+                    continue
+        elif b2 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 7:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 8:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 9:
+                    afficher_texte(mod, texte,"3mdps")
+                    break
+                else:
+                    continue
+        elif b3 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 11:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 12:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 13:
+                    afficher_texte(mod, texte,"3mdps")
+                    break
+                else:
+                    continue
+        elif b4 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 16:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 17:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 18:
+                    afficher_texte(mod, texte,"3mdps")
+                    break
+                else:
+                    continue
+        elif b5 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 20:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 21:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 22:
+                    afficher_texte(mod, texte,"3mdps")
+                    break
+                else:
+                    continue
+        elif b6 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 24:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 25:
+                    afficher_texte(mod, texte,"3mdps")
+                    continue
+                elif mod == 26:
+                    afficher_texte(mod, texte,"3mdps")
+                    break
+                else:
+                    continue
+        buttonSave2 = Button(log7, text="Valider",background='red', command=lambda: [save_mdps(nom,categories_liste,w_or_e,texte),gestion3(log7,nom,categories_liste,w_or_e,texte)])
+        buttonSave2.place(x=630, y=112)
 
-            with open("mdps.txt", "a+") as mdps:
-                i = 0
-                while True:
-                    i += 1
-                    if (all_lines[i] % 33 == 1) != pseudo:
-                        break
-                    elif len(all_lines) < i:
-                        break
-                    else:
-                        if i % 33 == 8:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but1))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 9:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but2))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 10:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but3))
-                            bouton_genre.place(x=560, y=280)
-                        else:
-                            break
-        if gestion3(cat3):
-            for num1 in range(5):
-                donnee = str(entry_mdps[num1].get())
-                liste_mdps.append(donnee)
+def afficher_mdpsv2(menu,item,nom,categories_liste,w_or_e):
+    #Permet d'afficher pour les 5 mots de passe
 
-            with open("mdps.txt", "a+") as mdps:
-                i = 0
-                while True:
-                    i += 1
-                    if (all_lines[i] % 33 == 1) != pseudo:
-                        break
-                    elif len(all_lines) < i:
-                        break
-                    else:
-                        if i % 33 == 12:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but1))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 13:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but2))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 14:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but3))
-                            bouton_genre.place(x=560, y=280)
-                        else:
-                            break
-        if gestion3(cat4):
-            for num1 in range(5):
-                donnee = str(entry_mdps[num1].get())
-                liste_mdps.append(donnee)
+    new = menu.entrycget(1, "label")
+    edit = menu.entrycget(2, "label")
+    createfen(log7, "1280x700", "grey", "0")
+    menu_barv2(log7,nom,categories_liste,w_or_e)
+    my_font = font.Font(fen2, ('Helvetica', 12, 'bold'))
+    w_or_e.append(["1"])
+    if new == item:
 
-            with open("mdps.txt", "a+") as mdps:
-                i = 0
-                while True:
-                    i += 1
-                    if (all_lines[i] % 33 == 1) != pseudo:
-                        break
-                    elif len(all_lines) < i:
-                        break
-                    else:
-                        if i % 33 == 17:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but1))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 18:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but2))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 19:
-                            bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but3))
-                            bouton_genre.place(x=560, y=280)
-                        else:
-                            break
-        if gestion3(cat5):
-            for num1 in range(5):
-                donnee = str(entry_mdps[num1].get())
-                liste_mdps.append(donnee)
+        information1 = Label(log7,
+                             text="Ecrivez vos 5 mots de passes tout en respectant la règle d'un mot de passe par ligne ",background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+        information1.place(x=200, y=100)
+        texte = Text(log7, height=5, width=20)
+        texte.place(x=500, y=200)
+        buttonSave1 = Button(log7, text="Valider",background='red', command=lambda: [select_button(buttonSave1, w_or_e),
+                                                                    save_mdps(nom, categories_liste,w_or_e,texte),
+                                                                    gestion3(log7, nom, categories_liste,w_or_e,texte)])
+        buttonSave1.place(x=630, y=112)
+    if edit == item:
+        information2 = Label(log7,
+                             text="Modifiez vos 5 mots de passes tout en respectant la règle d'un mot de passe par ligne ",background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+        information2.place(x=200, y=100)
+        texte = Text(log7, height=5, width=20)
+        texte.place(x=500, y=200)
+        with open("mdps.txt", "r+") as mdps:
+            for i in range(1):
+                mdps.seek(0)
+                all_lines = mdps.readlines()
+                all_lines = [lines.rstrip("\n") for lines in all_lines]
+            mod = all_lines[len(entree_liste) % 33]
+            mod = int(mod)
+        while mod <= len(all_lines):
+            mod += 1
+            if mod == 0 and mod != nom:
+                break
+            elif mod == 29:
+                afficher_texte(mod, texte,"5mdps")
+                continue
+            elif mod == 30:
+                afficher_texte(mod, texte,"5mdps")
+                continue
+            elif mod == 31:
+                afficher_texte(mod, texte,"5mdps")
+                continue
+            elif mod == 32:
+                afficher_texte(mod, texte,"5mdps")
+                continue
+            elif mod == 33:
+                afficher_texte(mod, texte,"5mdps")
+                break
+            else:
+                continue
 
-                with open("mdps.txt", "a+") as mdps:
-                    i = 0
-                    while True:
-                        i += 1
-                        if (all_lines[i] % 33 == 1) != pseudo:
-                            break
-                        elif len(all_lines) < i:
-                            break
-                        else:
-                            if i % 33 == 21:
-                                bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but1))
-                                bouton_genre.place(x=560, y=280)
-                            elif i % 33 == 22:
-                                bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but2))
-                                bouton_genre.place(x=560, y=280)
-                            elif i % 33 == 23:
-                                bouton_genre = Button(log5, text=all_lines[i], command=lambda: gestion2(but3))
-                                bouton_genre.place(x=560, y=280)
-                            else:
-                                break
-        if gestion3(cat6):
-            for num1 in range(5):
-                donnee = str(entry_mdps[num1].get())
-                liste_mdps.append(donnee)
+        buttonSave2 = Button(log7, text="Valider",background='red', command=lambda: [save_mdps(nom, categories_liste,texte),
+                                                                    gestion3(log7, nom, categories_liste,w_or_e,texte)])
+        buttonSave2.place(x=630, y=112)
+def replace_line(file_name, line_num, text):
+    #Permet de remplacer les lignes
+    lines = open(file_name, 'r').readlines()
+    lines[line_num] = text
+    out = open(file_name, 'w')
+    out.writelines(lines)
+    out.close()
+def save_mdps(nom,categories_liste,w_or_e,texte):
+    #Permet de sauvegarder les mots de passe dnas le ficier texte
+    valeurs = []
+    bouton_categorie1 = '.!toplevel5.!button'
+    bouton_categorie2 = '.!toplevel5.!button2'
+    bouton_categorie3 = '.!toplevel5.!button3'
+    bouton_categorie4 = '.!toplevel5.!button4'
+    bouton_categorie5 = '.!toplevel5.!button5'
+    bouton_categorie6 = '.!toplevel5.!button6'
+    with open("mdps.txt", "r+") as mdps:
+        for i in range(1):
+            mdps.seek(0)
+            all_lines = mdps.readlines()
+            all_lines = [lines.rstrip("\n") for lines in all_lines]
+        mod = all_lines[len(entree_liste) % 33]
+        mod = int(mod)
 
-            with open("mdps.txt", "a+") as mdps:
-                i = 0
-                while True:
-                    i += 1
-                    if (all_lines[i] % 33 == 1) != pseudo:
-                        break
-                    elif len(all_lines) < i:
-                        break
-                    else:
-                        if i % 33 == 25:
-                            bouton_genre = Button(log4, text=all_lines[i], command=lambda: gestion2(but1))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 26:
-                            bouton_genre = Button(log4, text=all_lines[i], command=lambda: gestion2(but2))
-                            bouton_genre.place(x=560, y=280)
-                        elif i % 33 == 27:
-                            bouton_genre = Button(log4, text=all_lines[i], command=lambda: gestion2(but3))
-                            bouton_genre.place(x=560, y=280)
-                        else:
-                            break
-    if valid2 == True:
-        for num2 in range(5):
-            donnee = str(entry_mdps[num2].get())
-            liste_mdps.append(donnee)
+    if w_or_e[0] == "0":
+        for i in range(3):
+            i += 1
+            i = str(i)
+            i = i + ".0"
+            i = float(i)
+            valeur_user = texte.get(str(i), str(i + 1))
+            valeurs.append(valeur_user)
+        if bouton_categorie1 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 4:
+                    replace_line("mdps.txt",mod,valeurs[0])
+                    continue
+                elif mod == 5:
+                    replace_line("mdps.txt", mod, valeurs[1])
+                    continue
+                elif mod == 6:
+                    replace_line("mdps.txt", mod, valeurs[2])
+                    break
+                else:
+                    continue
+        if bouton_categorie2 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 8:
+                    replace_line("mdps.txt",mod,valeurs[0])
+                    continue
+                elif mod == 9:
+                    replace_line("mdps.txt", mod, valeurs[1])
+                    continue
+                elif mod == 10:
+                    replace_line("mdps.txt", mod, valeurs[2])
+                    break
+                else:
+                    continue
+        if bouton_categorie3 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 12:
+                    replace_line("mdps.txt",mod,valeurs[0])
+                    continue
+                elif mod == 13:
+                    replace_line("mdps.txt", mod, valeurs[1])
+                    continue
+                elif mod == 14:
+                    replace_line("mdps.txt", mod, valeurs[2])
+                    break
+                else:
+                    continue
+        if bouton_categorie4 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 17:
+                    replace_line("mdps.txt",mod,valeurs[0])
+                    continue
+                elif mod == 18:
+                    replace_line("mdps.txt", mod, valeurs[1])
+                    continue
+                elif mod == 19:
+                    replace_line("mdps.txt", mod, valeurs[2])
+                    break
+                else:
+                    continue
+        if bouton_categorie5 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 21:
+                    replace_line("mdps.txt",mod,valeurs[0])
+                    continue
+                elif mod == 22:
+                    replace_line("mdps.txt", mod, valeurs[1])
+                    continue
+                elif mod == 23:
+                    replace_line("mdps.txt", mod, valeurs[2])
+                    break
+                else:
+                    continue
+        if bouton_categorie6 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 25:
+                    replace_line("mdps.txt",mod,valeurs[0])
+                    continue
+                elif mod == 26:
+                    replace_line("mdps.txt", mod, valeurs[1])
+                    continue
+                elif mod == 27:
+                    replace_line("mdps.txt", mod, valeurs[2])
+                    break
+                else:
+                    continue
+
+
+    elif w_or_e[0] == "1":
+        valeurs.seek(0)
+        for i in range(5):
+            i+=1
+            i = str(i)
+            i = i + ".0"
+            i = float(i)
+            valeur_user = texte.get(str(i), str(i+1))
+            valeurs.append(valeur_user)
+        while mod <= len(all_lines):
+            mod += 1
+            if mod == 0 and mod != nom:
+                break
+            elif mod == 29:
+                replace_line("mdps.txt", mod, valeurs[0])
+                continue
+            elif mod == 30:
+                replace_line("mdps.txt", mod, valeurs[1])
+                continue
+            elif mod == 31:
+                replace_line("mdps.txt", mod, valeurs[2])
+                continue
+            elif mod == 32:
+                replace_line("mdps.txt", mod, valeurs[3])
+                continue
+            elif mod == 33:
+                replace_line("mdps.txt", mod, valeurs[4])
+                break
+            else:
+                continue
+    return bouton_categorie1,bouton_categorie2,bouton_categorie3,bouton_categorie4,bouton_categorie5,bouton_categorie6
+
+def lire_ligne(file,index_ligne,liste_mdps):
+    #Permet de lire une ligne grâce au mod
+    with open(file, "r") as f:
+        if len(liste_mdps) >= 4:
+            liste_mdps[:] = []
+        for i in range(index_ligne):
+            ligne = f.readline()
+            liste_mdps.append(ligne)
+def gestion3(detruit,nom,categories_liste,w_or_e,texte):
+    #Affiche les mots de passe dans des labels
+    detruit.withdraw()
+    createfen(log8, "1280x700", "grey", "0")
+    menu_barv2(log8,nom,categories_liste,w_or_e)
+    my_font = font.Font(fen2, ('Helvetica', 12, 'bold'))
+    w_or_e.append("0")
+    b1, b2, b3, b4, b5, b6 = save_mdps(nom, categories_liste,w_or_e,texte)
+    string = 'Mot de passe '
+    labels = []
+    liste_mdps = []
+    label1 = Label()
+    label2 = Label()
+    label3 = Label()
+    with open("mdps.txt", "r+") as mdps:
+        for i in range(1):
+            mdps.seek(0)
+            all_lines = mdps.readlines()
+            all_lines = [lines.rstrip("\n") for lines in all_lines]
+        mod = all_lines[len(entree_liste) % 33]
+        mod = int(mod)
+        if b1 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 3:
+                    lire_ligne("mdps.txt",mod,liste_mdps)
+                    continue
+                elif mod == 4:
+                    lire_ligne("mdps.txt",mod,liste_mdps)
+                    continue
+                elif mod == 5:
+                    lire_ligne("mdps.txt",mod,liste_mdps)
+                    break
+                else:
+                    continue
+        if b2 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 7:
+                    lire_ligne("mdps.txt", mod,liste_mdps)
+                    continue
+                elif mod == 8:
+                    lire_ligne("mdps.txt", mod,liste_mdps)
+                    continue
+                elif mod == 9:
+                    lire_ligne("mdps.txt", mod,liste_mdps)
+                    break
+                else:
+                    continue
+        if b3 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 11:
+                    lire_ligne("mdps.txt", mod,liste_mdps)
+                    continue
+                elif mod == 12:
+                    lire_ligne("mdps.txt", mod,liste_mdps)
+                    continue
+                elif mod == 13:
+                    lire_ligne("mdps.txt", mod,liste_mdps)
+                    break
+                else:
+                    continue
+        if b4 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 16:
+                    lire_ligne("mdps.txt", mod,liste_mdps)
+                    continue
+                elif mod == 17:
+                    lire_ligne("mdps.txt", mod,liste_mdps)
+                    continue
+                elif mod == 18:
+                    lire_ligne("mdps.txt", mod,liste_mdps)
+                    break
+                else:
+                    continue
+        if b5 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 20:
+                    lire_ligne("mdps.txt", mod, liste_mdps)
+                    continue
+                elif mod == 21:
+                    lire_ligne("mdps.txt", mod, liste_mdps)
+                    continue
+                elif mod == 22:
+                    lire_ligne("mdps.txt", mod, liste_mdps)
+                    break
+                else:
+                    continue
+        if b6 == categories_liste[0]:
+            while mod <= len(all_lines):
+                mod += 1
+                if mod == 0 and mod != nom:
+                    break
+                elif mod == 24:
+                    lire_ligne("mdps.txt", mod, liste_mdps)
+                    continue
+                elif mod == 25:
+                    lire_ligne("mdps.txt", mod, liste_mdps)
+                    continue
+                elif mod == 26:
+                    lire_ligne("mdps.txt", mod, liste_mdps)
+                    break
+                else:
+                    continue
+
+    if label1.winfo_exists() == True:
+        label1.configure(log8, text='',background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+        label1.pack()
+    if label2.winfo_exists() == True:
+        label2.configure(log8, text='',background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+        label2.pack()
+    if label3.winfo_exists() == True:
+        label3.configure(log8, text='',background='grey', font=my_font, wraplength=500, anchor=W, justify=LEFT)
+        label3.pack()
+    for i in range(1):
+        jk = string + " : {} ".format(liste_mdps[i])
+        jk2 = string + " : {} ".format(liste_mdps[i+1])
+        jk3 = string + " : {} ".format(liste_mdps[+2])
+        label1.configure(text=jk)
+        label2.configure(text=jk2)
+        label3.configure(text=jk3)
 
 
 def Inscription1(detruit, erreur):
@@ -936,7 +1383,7 @@ def Inscription1(detruit, erreur):
 
     ## Label âge
 
-    age = Label(fen2, text=" ge", width=25, height=3, bg="grey", fg="white", font=my_font)
+    age = Label(fen2, text="Âge", width=25, height=3, bg="grey", fg="white", font=my_font)
     age.place(x=20, y=200)
 
     ## Label pseudonyme
@@ -981,7 +1428,7 @@ def Inscription1(detruit, erreur):
     bouton.place(x=630, y=112)
 
     ##Bouton retour
-    bouton2 = Button(fen2, text="Retour", background='red' ,command=lambda:Menu(fen2))
+    bouton2 = Button(fen2, text="Retour", background='red' ,command=lambda:Menu1(fen2))
     bouton2.place(x=630, y=200)
 
   
@@ -1261,7 +1708,7 @@ def Inscription4(detruit):
     label.place(x=0, y=270, width=500, height=100)
 
     ##Bouton valider 
-    valider = Button(fen5, text="Terminer l'inscription", background='red' , command=lambda:Menu(fen5))
+    valider = Button(fen5, text="Terminer l'inscription", background='red' , command=lambda:Menu1(fen5))
     valider.place(x=510, y=270)
 
     ##Remise des variables à zéro
@@ -1274,7 +1721,5 @@ def Inscription4(detruit):
 
 ## Execution du programme.
 if __name__ == '__main__':
-    Menu("")
-
-
-
+    Menu1("")
+    fen1.mainloop()
